@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>כלי 30/60/90 — מעקב קליטת עובד/ת חדש/ה</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.0.0/tabler-icons.min.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f7f7f5;
+    --bg-tertiary: #f0efe9;
+    --text-primary: #1a1a18;
+    --text-secondary: #6b6b66;
+    --border-light: rgba(0,0,0,0.10);
+    --border-medium: rgba(0,0,0,0.18);
+    --border-strong: rgba(0,0,0,0.28);
+    --accent: #7F77DD;
+    --accent-light: #EEEDFE;
+    --accent-dark: #3C3489;
+    --red: #E24B4A;
+    --red-light: #FCEBEB;
+    --red-dark: #A32D2D;
+    --green: #0F6E56;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg-primary: #1e1e1c;
+      --bg-secondary: #272725;
+      --bg-tertiary: #2e2e2b;
+      --text-primary: #f0efe9;
+      --text-secondary: #9e9e97;
+      --border-light: rgba(255,255,255,0.10);
+      --border-medium: rgba(255,255,255,0.18);
+      --border-strong: rgba(255,255,255,0.28);
+      --accent: #9b94f0;
+      --accent-light: #26215C;
+      --accent-dark: #CECBF6;
+      --red: #f07070;
+      --red-light: #501313;
+      --red-dark: #F7C1C1;
+      --green: #5DCAA5;
+    }
+  }
+
+  body {
+    font-family: var(--font);
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    min-height: 100vh;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+  }
+
+  .container {
+    max-width: 780px;
+    margin: 0 auto;
+  }
+
+  /* Header */
+  .header { margin-bottom: 2rem; }
+  .title-row { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; flex-wrap: wrap; }
+  h1 { font-size: 24px; font-weight: 600; color: var(--text-primary); }
+  .title-badge {
+    background: var(--accent-light); color: var(--accent-dark);
+    font-size: 11px; font-weight: 600; padding: 4px 12px;
+    border-radius: 20px; white-space: nowrap;
+  }
+  .subtitle { font-size: 14px; color: var(--text-secondary); line-height: 1.65; max-width: 600px; }
+
+  /* Card */
+  .card {
+    background: var(--bg-primary);
+    border: 0.5px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem;
+    margin-bottom: 1.25rem;
+  }
+
+  /* Employee fields */
+  .employee-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 1rem; }
+  @media (max-width: 500px) { .employee-grid { grid-template-columns: 1fr; } }
+  .field-group { display: flex; flex-direction: column; gap: 5px; }
+  .field-label { font-size: 12px; color: var(--text-secondary); font-weight: 500; }
+  .field-input {
+    background: var(--bg-secondary);
+    border: 0.5px solid var(--border-light);
+    border-radius: var(--radius-md);
+    padding: 8px 10px; font-size: 14px;
+    color: var(--text-primary); font-family: var(--font);
+    outline: none; transition: border-color 0.15s; width: 100%;
+  }
+  .field-input:focus { border-color: var(--accent); }
+
+  /* Tabs */
+  .tabs {
+    display: flex; gap: 3px; margin-bottom: 1.5rem;
+    background: var(--bg-secondary); padding: 4px;
+    border-radius: var(--radius-md);
+    overflow-x: auto;
+  }
+  .tab {
+    flex: 1; min-width: 70px; padding: 8px 6px;
+    font-size: 13px; font-weight: 500;
+    border: none; background: none; cursor: pointer;
+    border-radius: 6px; color: var(--text-secondary);
+    transition: all 0.15s; font-family: var(--font);
+    white-space: nowrap;
+  }
+  .tab:hover { color: var(--text-primary); }
+  .tab.active {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.10);
+  }
+
+  /* Phase panels */
+  .phase-panel { display: none; }
+  .phase-panel.active { display: block; }
+  .phase-title { font-size: 20px; font-weight: 600; color: var(--text-primary); margin-bottom: 6px; }
+  .phase-goal {
+    font-size: 14px; color: var(--text-secondary); line-height: 1.65;
+    padding: 10px 14px; background: var(--bg-secondary);
+    border-radius: var(--radius-md); border-right: 3px solid var(--accent);
+    margin-bottom: 1.25rem;
+  }
+
+  /* Rating table */
+  .table-wrap {
+    background: var(--bg-primary);
+    border: 0.5px solid var(--border-light);
+    border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 1.25rem;
+  }
+  .table-head {
+    display: grid; grid-template-columns: 1.8fr 3fr 110px;
+    background: var(--bg-secondary); padding: 10px 16px; gap: 12px;
+  }
+  .th { font-size: 12px; font-weight: 600; color: var(--text-secondary); }
+  .table-row {
+    display: grid; grid-template-columns: 1.8fr 3fr 110px;
+    padding: 12px 16px; gap: 12px;
+    border-top: 0.5px solid var(--border-light); align-items: start;
+    transition: background 0.1s;
+  }
+  .table-row:hover { background: var(--bg-secondary); }
+  .td-area { font-size: 13px; font-weight: 600; color: var(--text-primary); padding-top: 2px; }
+  .td-q { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+
+  /* Stars */
+  .stars { display: flex; gap: 3px; flex-direction: row-reverse; justify-content: flex-start; }
+  .stars input { display: none; }
+  .stars label { cursor: pointer; font-size: 22px; color: var(--border-medium); transition: color 0.1s; line-height: 1; }
+  .stars label:hover, .stars label:hover ~ label, .stars input:checked ~ label { color: var(--accent); }
+
+  /* Summary */
+  .summary-title {
+    font-size: 15px; font-weight: 600; color: var(--text-primary);
+    margin-bottom: 1rem; display: flex; align-items: center; gap: 8px;
+  }
+  .summary-title i { color: var(--accent); }
+  .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 1rem; }
+  @media (max-width: 500px) { .summary-grid { grid-template-columns: 1fr; } }
+  .summary-field { display: flex; flex-direction: column; gap: 5px; }
+  .section-label { font-size: 12px; color: var(--text-secondary); font-weight: 600; }
+  .summary-textarea {
+    background: var(--bg-secondary); border: 0.5px solid var(--border-light);
+    border-radius: var(--radius-md); padding: 10px; font-size: 13px;
+    color: var(--text-primary); font-family: var(--font);
+    resize: vertical; min-height: 72px; outline: none; line-height: 1.6;
+    transition: border-color 0.15s;
+  }
+  .summary-textarea:focus { border-color: var(--accent); }
+
+  /* Decisions */
+  .decisions-list { display: flex; flex-direction: column; gap: 8px; }
+  .decision-row { display: flex; align-items: center; gap: 8px; }
+  .decision-num { font-size: 12px; color: var(--text-secondary); font-weight: 600; min-width: 16px; }
+  .decision-input {
+    flex: 1; background: var(--bg-secondary); border: 0.5px solid var(--border-light);
+    border-radius: var(--radius-md); padding: 8px 10px; font-size: 13px;
+    color: var(--text-primary); font-family: var(--font); outline: none;
+    transition: border-color 0.15s;
+  }
+  .decision-input:focus { border-color: var(--accent); }
+
+  /* Radio */
+  .radio-group { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
+  .radio-label { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-primary); cursor: pointer; }
+  .radio-label input[type=radio] { accent-color: var(--accent); width: 15px; height: 15px; cursor: pointer; flex-shrink: 0; }
+
+  /* Flags */
+  .flag-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+  @media (max-width: 500px) { .flag-grid { grid-template-columns: 1fr; } }
+  .flag-item {
+    display: flex; align-items: flex-start; gap: 8px; font-size: 13px;
+    color: var(--text-primary); cursor: pointer; padding: 9px 10px;
+    border-radius: var(--radius-md); transition: background 0.1s;
+    border: 0.5px solid transparent;
+  }
+  .flag-item:hover { background: var(--bg-secondary); }
+  .flag-item input[type=checkbox] { accent-color: var(--red); width: 15px; height: 15px; margin-top: 1px; flex-shrink: 0; cursor: pointer; }
+  .flag-item.flagged { color: var(--red-dark); background: var(--red-light); border-color: rgba(226,75,74,0.2); }
+  .flag-counter { font-size: 13px; color: var(--text-secondary); margin: 12px 0 8px; min-height: 20px; }
+  .flag-count-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: var(--red-light); color: var(--red-dark);
+    font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 20px;
+  }
+
+  /* Actions table */
+  .actions-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .actions-table th {
+    font-size: 12px; font-weight: 600; color: var(--text-secondary);
+    padding: 9px 10px; text-align: right; background: var(--bg-secondary);
+    border-bottom: 0.5px solid var(--border-light);
+  }
+  .actions-table td { padding: 8px 10px; border-bottom: 0.5px solid var(--border-light); vertical-align: middle; }
+  .actions-table tr:last-child td { border-bottom: none; }
+  .actions-table input {
+    width: 100%; background: none; border: none; font-size: 13px;
+    color: var(--text-primary); font-family: var(--font); outline: none; padding: 2px 0;
+  }
+  .actions-table input:focus { border-bottom: 1px solid var(--accent); }
+  .status-select {
+    background: var(--bg-secondary); border: 0.5px solid var(--border-light);
+    border-radius: 6px; padding: 5px 7px; font-size: 12px;
+    color: var(--text-primary); font-family: var(--font); outline: none; width: 100%;
+  }
+
+  /* Check-in questions */
+  .checkin-questions { background: var(--bg-secondary); border-radius: var(--radius-md); padding: 1rem; }
+  .q-item { display: flex; gap: 10px; padding: 8px 0; border-bottom: 0.5px solid var(--border-light); align-items: flex-start; }
+  .q-item:last-child { border-bottom: none; }
+  .q-icon { color: var(--accent); font-size: 16px; margin-top: 2px; flex-shrink: 0; }
+  .q-text { font-size: 13px; color: var(--text-primary); line-height: 1.55; }
+
+  /* Buttons */
+  .btn {
+    background: var(--bg-primary); border: 0.5px solid var(--border-medium);
+    border-radius: var(--radius-md); padding: 8px 18px; font-size: 13px;
+    font-weight: 500; color: var(--text-primary); cursor: pointer;
+    font-family: var(--font); transition: all 0.15s;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .btn:hover { background: var(--bg-secondary); }
+  .btn:active { transform: scale(0.98); }
+  .btn-accent { background: var(--accent); color: white; border-color: var(--accent); }
+  .btn-accent:hover { opacity: 0.9; background: var(--accent); }
+
+  /* Save bar */
+  .save-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: 1rem; padding-top: 1rem;
+    border-top: 0.5px solid var(--border-light);
+  }
+  .saved-toast {
+    display: none; font-size: 13px; color: var(--green);
+    align-items: center; gap: 6px;
+  }
+  .saved-toast.show { display: flex; }
+  .auto-save-note { font-size: 12px; color: var(--text-secondary); }
+
+  /* Print */
+  @media print {
+    body { background: white; padding: 0; }
+    .tabs { display: none; }
+    .phase-panel { display: block !important; page-break-after: always; }
+    .btn { display: none; }
+    .save-bar { display: none; }
+  }
+
+  /* Divider */
+  .divider { height: 1rem; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="title-row">
+      <h1>כלי 30/60/90 — מעקב קליטת עובד/ת חדש/ה</h1>
+      <span class="title-badge">למנהל/ת ישיר/ה</span>
+    </div>
+    <p class="subtitle">מבנה ברור לצ׳ק-אינים, מדדים, דגלים אדומים ופעולות המשך — כדי לזהות פערים בזמן ולוודא קליטה מוצלחת.</p>
+  </div>
+
+  <!-- Employee Details -->
+  <div class="card">
+    <div class="section-label" style="display:flex;align-items:center;gap:6px;margin-bottom:0"><i class="ti ti-user" style="color:var(--accent)"></i> פרטי עובד/ת</div>
+    <div class="employee-grid">
+      <div class="field-group"><label class="field-label">שם עובד/ת</label><input class="field-input" type="text" placeholder="שם מלא" id="emp-name"></div>
+      <div class="field-group"><label class="field-label">תפקיד</label><input class="field-input" type="text" placeholder="שם התפקיד" id="emp-role"></div>
+      <div class="field-group"><label class="field-label">מחלקה</label><input class="field-input" type="text" placeholder="מחלקה" id="emp-dept"></div>
+      <div class="field-group"><label class="field-label">מנהל/ת ישיר/ה</label><input class="field-input" type="text" placeholder="שם המנהל/ת" id="emp-manager"></div>
+      <div class="field-group"><label class="field-label">תאריך תחילת עבודה</label><input class="field-input" type="date" id="emp-start"></div>
+      <div class="field-group"><label class="field-label">תאריך בדיקת 30 יום</label><input class="field-input" type="date" id="emp-d30"></div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('p30',this)"><i class="ti ti-calendar-stats"></i> 30 יום</button>
+    <button class="tab" onclick="switchTab('p60',this)"><i class="ti ti-calendar-stats"></i> 60 יום</button>
+    <button class="tab" onclick="switchTab('p90',this)"><i class="ti ti-calendar-check"></i> 90 יום</button>
+    <button class="tab" onclick="switchTab('flags',this)"><i class="ti ti-flag"></i> דגלים</button>
+    <button class="tab" onclick="switchTab('actions',this)"><i class="ti ti-list-check"></i> פעולות</button>
+  </div>
+
+  <!-- 30 DAYS -->
+  <div id="p30" class="phase-panel active">
+    <div class="phase-title">בדיקת 30 יום</div>
+    <div class="phase-goal">מטרה: לוודא שהעובד/ת מבין/ה את התפקיד ואת סביבת העבודה. לא מצפים לעצמאות מלאה — אלא להבנה בסיסית, למידה פעילה, חיבור לצוות ותחילת ביצוע משימות בליווי.</div>
+
+    <div class="table-wrap">
+      <div class="table-head">
+        <div class="th">תחום</div>
+        <div class="th">שאלה למנהל/ת</div>
+        <div class="th" style="text-align:center">דירוג 1–5</div>
+      </div>
+      <div id="rows30"></div>
+    </div>
+
+    <div class="card">
+      <div class="summary-title"><i class="ti ti-notes"></i> סיכום 30 יום</div>
+      <div class="summary-grid">
+        <div class="summary-field"><div class="section-label">מה מתקדם טוב?</div><textarea class="summary-textarea" placeholder="רשמ/י דוגמאות..."></textarea></div>
+        <div class="summary-field"><div class="section-label">חוזקות שבלטו</div><textarea class="summary-textarea" placeholder="מה ראית/ה?"></textarea></div>
+        <div class="summary-field"><div class="section-label">פערים שזוהו</div><textarea class="summary-textarea" placeholder="מה צריך טיפול?"></textarea></div>
+        <div class="summary-field"><div class="section-label">מה העובד/ת צריך/ה יותר ממך?</div><textarea class="summary-textarea" placeholder="ליווי, כלים, פידבק..."></textarea></div>
+      </div>
+      <div class="section-label" style="margin-bottom:10px">החלטות לחודש הבא</div>
+      <div class="decisions-list">
+        <div class="decision-row"><span class="decision-num">1</span><input class="decision-input" type="text" placeholder="פעולה ראשונה"></div>
+        <div class="decision-row"><span class="decision-num">2</span><input class="decision-input" type="text" placeholder="פעולה שנייה"></div>
+        <div class="decision-row"><span class="decision-num">3</span><input class="decision-input" type="text" placeholder="פעולה שלישית"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="summary-title"><i class="ti ti-message-circle"></i> שאלות לשיחת צ׳ק-אין עם העובד/ת</div>
+      <div class="checkin-questions" id="qlist30"></div>
+    </div>
+  </div>
+
+  <!-- 60 DAYS -->
+  <div id="p60" class="phase-panel">
+    <div class="phase-title">בדיקת 60 יום</div>
+    <div class="phase-goal">מטרה: לבדוק מעבר מלמידה לביצוע עצמאי יותר. העובד/ת אמור/ה לבצע משימות שוטפות עם פחות ליווי, להבין סדרי עדיפויות ולהראות התקדמות מקצועית.</div>
+
+    <div class="table-wrap">
+      <div class="table-head">
+        <div class="th">תחום</div>
+        <div class="th">שאלה למנהל/ת</div>
+        <div class="th" style="text-align:center">דירוג 1–5</div>
+      </div>
+      <div id="rows60"></div>
+    </div>
+
+    <div class="card">
+      <div class="summary-title"><i class="ti ti-notes"></i> סיכום 60 יום</div>
+      <div class="summary-grid">
+        <div class="summary-field"><div class="section-label">תחומים עם עצמאות</div><textarea class="summary-textarea" placeholder="איפה כבר עובד/ת לבד?"></textarea></div>
+        <div class="summary-field"><div class="section-label">תחומים שעדיין דורשים ליווי</div><textarea class="summary-textarea" placeholder="איפה עדיין צריך/ה תמיכה?"></textarea></div>
+      </div>
+      <div class="section-label" style="margin-bottom:10px">קצב ההתקדמות תואם לציפיות?</div>
+      <div class="radio-group">
+        <label class="radio-label"><input type="radio" name="pace60" value="yes"> כן, בהתאם לציפיות</label>
+        <label class="radio-label"><input type="radio" name="pace60" value="partial"> חלקית</label>
+        <label class="radio-label"><input type="radio" name="pace60" value="no"> לא — נדרשת תשומת לב</label>
+      </div>
+      <div class="divider"></div>
+      <div class="section-label" style="margin-bottom:10px">מה חשוב לחזק ב-30 הימים הבאים?</div>
+      <div class="decisions-list">
+        <div class="decision-row"><span class="decision-num">1</span><input class="decision-input" type="text" placeholder="נושא לחיזוק"></div>
+        <div class="decision-row"><span class="decision-num">2</span><input class="decision-input" type="text" placeholder="נושא לחיזוק"></div>
+        <div class="decision-row"><span class="decision-num">3</span><input class="decision-input" type="text" placeholder="נושא לחיזוק"></div>
+      </div>
+      <div class="divider"></div>
+      <div class="summary-field"><div class="section-label">פידבק חשוב לתת עכשיו</div><textarea class="summary-textarea" placeholder="מה חשוב לומר לעובד/ת בשיחה?"></textarea></div>
+    </div>
+
+    <div class="card">
+      <div class="summary-title"><i class="ti ti-message-circle"></i> שאלות לשיחת צ׳ק-אין</div>
+      <div class="checkin-questions" id="qlist60"></div>
+    </div>
+  </div>
+
+  <!-- 90 DAYS -->
+  <div id="p90" class="phase-panel">
+    <div class="phase-title">בדיקת 90 יום</div>
+    <div class="phase-goal">מטרה: לבדוק האם העובד/ת מחזיק/ה את התפקיד בצורה יציבה — עצמאות, עמידה בציפיות, השתלבות ארגונית וביצועים עקביים.</div>
+
+    <div class="table-wrap">
+      <div class="table-head">
+        <div class="th">תחום</div>
+        <div class="th">שאלה למנהל/ת</div>
+        <div class="th" style="text-align:center">דירוג 1–5</div>
+      </div>
+      <div id="rows90"></div>
+    </div>
+
+    <div class="card">
+      <div class="summary-title"><i class="ti ti-notes"></i> סיכום 90 יום</div>
+      <div class="section-label" style="margin-bottom:10px">האם העובד/ת נקלט/ה בהצלחה?</div>
+      <div class="radio-group">
+        <label class="radio-label"><input type="radio" name="result90" value="yes"> כן — קליטה מוצלחת</label>
+        <label class="radio-label"><input type="radio" name="result90" value="partial-ok"> כן, עם נקודות לחיזוק</label>
+        <label class="radio-label"><input type="radio" name="result90" value="partial"> חלקית — נדרשת תוכנית המשך</label>
+        <label class="radio-label"><input type="radio" name="result90" value="no"> לא — נדרש דיון התאמה</label>
+      </div>
+      <div class="divider"></div>
+      <div class="summary-grid">
+        <div class="summary-field"><div class="section-label">מה העובד/ת עושה טוב במיוחד?</div><textarea class="summary-textarea" placeholder="חוזקות מרכזיות..."></textarea></div>
+        <div class="summary-field"><div class="section-label">מה עדיין דורש שיפור?</div><textarea class="summary-textarea" placeholder="תחומים לפיתוח..."></textarea></div>
+        <div class="summary-field" style="grid-column:span 2"><div class="section-label">פער בין ציפיות לביצוע — אם קיים</div><textarea class="summary-textarea" placeholder="תאר/י אם יש פערים משמעותיים..."></textarea></div>
+      </div>
+      <div class="section-label" style="margin-bottom:10px">המלצה להמשך</div>
+      <div class="radio-group">
+        <label class="radio-label"><input type="radio" name="rec90" value="normal"> המשך רגיל בתפקיד</label>
+        <label class="radio-label"><input type="radio" name="rec90" value="plan"> המשך עם תוכנית חיזוק</label>
+        <label class="radio-label"><input type="radio" name="rec90" value="meeting"> שיחת תיאום ציפיות נוספת</label>
+        <label class="radio-label"><input type="radio" name="rec90" value="change"> שינוי תחומי אחריות</label>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="summary-title"><i class="ti ti-message-circle"></i> שאלות לשיחת צ׳ק-אין</div>
+      <div class="checkin-questions" id="qlist90"></div>
+    </div>
+  </div>
+
+  <!-- FLAGS -->
+  <div id="flags" class="phase-panel">
+    <div class="phase-title">דגלים אדומים</div>
+    <div class="phase-goal">סמנו סימנים שדורשים התערבות מוקדמת. הזיהוי המוקדם של פערים מאפשר תמיכה בזמן ומונע הידרדרות.</div>
+
+    <div class="card">
+      <div class="summary-title"><i class="ti ti-alert-triangle" style="color:var(--red)"></i> בדוק/י אם אחד מהדברים הבאים מופיע</div>
+      <div class="flag-grid" id="flag-grid"></div>
+      <div class="flag-counter" id="flag-counter"></div>
+      <div class="summary-field"><div class="section-label">פעולה נדרשת בעקבות הדגלים שסומנו</div><textarea class="summary-textarea" placeholder="מה תעשה/י בעקבות הדגלים?" style="min-height:90px"></textarea></div>
+    </div>
+  </div>
+
+  <!-- ACTIONS -->
+  <div id="actions" class="phase-panel">
+    <div class="phase-title">החלטות ופעולות להמשך</div>
+    <div class="phase-goal">מרכזו כאן את כל הפעולות שנובעות מהצ׳ק-אינים — מי אחראי/ת, מה הפעולה ועד מתי.</div>
+
+    <div class="card">
+      <div class="summary-title"><i class="ti ti-list-check"></i> טבלת פעולות</div>
+      <table class="actions-table">
+        <thead>
+          <tr>
+            <th>נושא</th>
+            <th>פעולה נדרשת</th>
+            <th>אחראי/ת</th>
+            <th>תאריך יעד</th>
+            <th>סטטוס</th>
+          </tr>
+        </thead>
+        <tbody id="actions-body"></tbody>
+      </table>
+      <div style="margin-top:12px">
+        <button class="btn" onclick="addActionRow('')"><i class="ti ti-plus"></i> הוסף/י שורה</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Save Bar -->
+  <div class="save-bar">
+    <span class="auto-save-note">הנתונים נשמרים אוטומטית בדפדפן שלך</span>
+    <div style="display:flex;align-items:center;gap:12px">
+      <span class="saved-toast" id="saved-toast"><i class="ti ti-check"></i> נשמר</span>
+      <button class="btn" onclick="window.print()"><i class="ti ti-printer"></i> הדפס/י</button>
+      <button class="btn btn-accent" onclick="saveAll()"><i class="ti ti-device-floppy"></i> שמור/י</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const rows30Data=[
+  ["הבנת החברה","האם העובד/ת מבין/ה מה החברה עושה ולמי היא נותנת שירות?"],
+  ["הבנת התפקיד","האם ברור לו/ה מה תחומי האחריות המרכזיים?"],
+  ["למידה פעילה","האם שואל/ת שאלות, מתעד/ת ולומד/ת באופן פעיל?"],
+  ["מערכות וכלים","האם יש גישה והיכרות בסיסית עם הכלים הנדרשים?"],
+  ["ביצוע ראשוני","האם הצליח/ה לבצע משימות פשוטות בליווי?"],
+  ["תקשורת","האם מעדכן/ת, שואל/ת ומציף/ה כשצריך?"],
+  ["השתלבות בצוות","האם יש חיבור ראשוני טוב לצוות ולממשקים?"],
+];
+const rows60Data=[
+  ["עצמאות","האם מצליח/ה לבצע משימות חוזרות בלי ליווי צמוד?"],
+  ["איכות ביצוע","האם העבודה מדויקת ועומדת בסטנדרט הנדרש?"],
+  ["ניהול זמן","האם המשימות מבוצעות בזמן ובסדר עדיפויות נכון?"],
+  ["הבנת ממשקים","האם ברור עם מי לעבוד ומתי לערב גורמים נוספים?"],
+  ["אחריות אישית","האם לוקח/ת בעלות על משימות ולא מחכה שיזכירו?"],
+  ["תקשורת ועדכונים","האם יש עדכונים בזמן, הצפת בעיות ושקיפות?"],
+  ["למידה מפידבק","האם מיישם/ת הערות שקיבל/ה?"],
+];
+const rows90Data=[
+  ["עמידה בציפיות","האם עומד/ת בציפיות שהוגדרו לתפקיד?"],
+  ["עצמאות","האם ניתן לסמוך עליו/ה במשימות המרכזיות?"],
+  ["איכות ועקביות","האם הביצועים יציבים לאורך זמן?"],
+  ["פתרון בעיות","האם מזהה בעיות ומציע/ה פתרונות?"],
+  ["תקשורת מקצועית","האם התקשורת ברורה, אחראית ומקדמת עבודה?"],
+  ["השתלבות ארגונית","האם יש חיבור טוב לצוות, למנהל/ת ולתרבות הארגונית?"],
+  ["פוטנציאל להמשך","האם יש בסיס טוב להתפתחות בתפקיד?"],
+];
+const checkInQs=[
+  "מה ברור לך היום יותר מאשר בהתחלה?",
+  "איפה את/ה עדיין מרגיש/ה חוסר ביטחון?",
+  "מה עוזר לך להצליח בתפקיד?",
+  "מה מקשה עליך כרגע?",
+  "איזה מידע, כלי או ליווי חסר לך?",
+  "מה לדעתך צריך להשתנות כדי שתוכל/י לעבוד טוב יותר?",
+];
+const flagsData=[
+  "לא שואל/ת שאלות למרות חוסר הבנה",
+  "חזרתיות על אותן טעויות",
+  "קושי בקבלת פידבק",
+  "משימות נופלות בין הכיסאות",
+  "לא מעדכן/ת בזמן",
+  "תלות גבוהה מדי במנהל/ת",
+  "קושי בהבנת סדרי עדיפויות",
+  "פער בין ביטחון עצמי לביצוע בפועל",
+  "קושי בהשתלבות בצוות",
+  "לא ברור אם מתאים/ה לתפקיד",
+];
+const defaultActions=["פער מקצועי","חיזוק מערכת / כלי","תיאום ציפיות","ליווי נוסף","משימות להעברה לאחריות העובד/ת"];
+
+function buildRatingStars(uid){
+  let h='<div class="stars">';
+  for(let i=5;i>=1;i--){
+    h+=`<input type="radio" id="${uid}s${i}" name="${uid}" value="${i}"><label for="${uid}s${i}">★</label>`;
+  }
+  return h+'</div>';
+}
+
+function buildRows(containerId,data){
+  const c=document.getElementById(containerId);
+  data.forEach((r,i)=>{
+    const d=document.createElement('div');
+    d.className='table-row';
+    d.innerHTML=`<div class="td-area">${r[0]}</div><div class="td-q">${r[1]}</div><div style="display:flex;justify-content:center">${buildRatingStars(containerId+'r'+i)}</div>`;
+    c.appendChild(d);
+  });
+}
+
+function buildQList(id){
+  const c=document.getElementById(id);
+  checkInQs.forEach(q=>{
+    const d=document.createElement('div');
+    d.className='q-item';
+    d.innerHTML=`<i class="ti ti-arrow-left q-icon"></i><span class="q-text">${q}</span>`;
+    c.appendChild(d);
+  });
+}
+
+function buildFlags(){
+  const g=document.getElementById('flag-grid');
+  flagsData.forEach((f,i)=>{
+    const lbl=document.createElement('label');
+    lbl.className='flag-item';
+    lbl.innerHTML=`<input type="checkbox" id="flag${i}" onchange="updateFlagCount()"><span>${f}</span>`;
+    lbl.setAttribute('for','flag'+i);
+    g.appendChild(lbl);
+  });
+}
+
+function updateFlagCount(){
+  const checked=document.querySelectorAll('#flag-grid input:checked').length;
+  const ctr=document.getElementById('flag-counter');
+  if(checked>0){
+    ctr.innerHTML=`<span class="flag-count-badge"><i class="ti ti-alert-triangle"></i> ${checked} דגל${checked>1?'ים':''} מסומן${checked>1?'ים':''}</span>`;
+  } else {
+    ctr.innerHTML='';
+  }
+  document.querySelectorAll('#flag-grid .flag-item').forEach(item=>{
+    item.classList.toggle('flagged',item.querySelector('input').checked);
+  });
+}
+
+function buildActionRows(){
+  defaultActions.forEach(t=>addActionRow(t));
+}
+
+function addActionRow(topic){
+  const b=document.getElementById('actions-body');
+  const tr=document.createElement('tr');
+  tr.innerHTML=`
+    <td><input type="text" value="${topic||''}" placeholder="נושא"></td>
+    <td><input type="text" placeholder="פעולה נדרשת"></td>
+    <td><input type="text" placeholder="מי?"></td>
+    <td><input type="date"></td>
+    <td><select class="status-select"><option value="">בחר/י</option><option>פתוח</option><option>בטיפול</option><option>הושלם</option><option>לא רלוונטי</option></select></td>
+  `;
+  b.appendChild(tr);
+}
+
+function switchTab(id,el){
+  document.querySelectorAll('.phase-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  if(el) el.classList.add('active');
+}
+
+function saveAll(){
+  // Save to localStorage
+  const data={};
+  document.querySelectorAll('input[type=text],input[type=date],textarea').forEach((el,i)=>{
+    data['f'+i]=el.value;
+  });
+  document.querySelectorAll('input[type=radio]:checked').forEach(el=>{
+    data['r_'+el.name]=el.value;
+  });
+  document.querySelectorAll('input[type=checkbox]').forEach((el,i)=>{
+    data['c'+i]=el.checked;
+  });
+  document.querySelectorAll('select').forEach((el,i)=>{
+    data['s'+i]=el.value;
+  });
+  try { localStorage.setItem('onboarding_tool_data', JSON.stringify(data)); } catch(e){}
+  const toast=document.getElementById('saved-toast');
+  toast.classList.add('show');
+  setTimeout(()=>toast.classList.remove('show'),2000);
+}
+
+function loadSaved(){
+  try {
+    const raw=localStorage.getItem('onboarding_tool_data');
+    if(!raw) return;
+    const data=JSON.parse(raw);
+    document.querySelectorAll('input[type=text],input[type=date],textarea').forEach((el,i)=>{
+      if(data['f'+i]!==undefined) el.value=data['f'+i];
+    });
+    document.querySelectorAll('input[type=radio]').forEach(el=>{
+      if(data['r_'+el.name]===el.value) el.checked=true;
+    });
+    document.querySelectorAll('input[type=checkbox]').forEach((el,i)=>{
+      if(data['c'+i]) el.checked=true;
+    });
+    document.querySelectorAll('select').forEach((el,i)=>{
+      if(data['s'+i]) el.value=data['s'+i];
+    });
+    updateFlagCount();
+  } catch(e){}
+}
+
+// Auto-save on input
+document.addEventListener('input', ()=>{
+  clearTimeout(window._saveTimer);
+  window._saveTimer=setTimeout(saveAll,1500);
+});
+
+buildRows('rows30',rows30Data);
+buildRows('rows60',rows60Data);
+buildRows('rows90',rows90Data);
+buildQList('qlist30');
+buildQList('qlist60');
+buildQList('qlist90');
+buildFlags();
+buildActionRows();
+loadSaved();
+</script>
+</body>
+</html>
